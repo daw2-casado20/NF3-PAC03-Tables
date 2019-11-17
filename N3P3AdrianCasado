@@ -1,0 +1,78 @@
+<?php
+//connect to MySQL
+$db = mysqli_connect('localhost' , 'adri', 'root') or 
+    die ('Unable to connect. Check your connection parameters.');
+
+// make sure you're using the right database
+mysqli_select_db($db,'mimusica') or die(mysqli_error($db));
+
+// retrieve information
+$query = 'SELECT
+        music_id, music_nombre, musica_tipo, musica_anio, musica_cantante,
+        music_productor
+    FROM
+        music
+    ORDER BY
+        music_nombre ASC,
+        musica_anio DESC';
+        
+$result = mysqli_query($db,$query) or die(mysqli_error($db));
+
+// determine number of rows in returned result
+$num_music = mysqli_num_rows($result);
+?>
+<div style="text-align: center;">
+ <h2>Musica</h2>
+ <table border="1" cellpadding="2" cellspacing="2"
+  style="width: 70%; margin-left: auto; margin-right: auto;">
+  <tr>
+   <th>Titulo musica</th>
+   <th>Año de salida</th>
+   <th>Genero musical</th>
+   <th>Cantante</th>
+
+  </tr>
+<?php
+    function get_tipos($musictipo_id) {
+        global $db;
+        $query = 'SELECT
+        musictipo_label
+        FROM
+        tiposmusica
+        WHERE
+        musictipo_id ='.$musictipo_id;
+        $result = mysqli_query($db,$query) or die(mysqli_error($db));
+        $row = mysqli_fetch_assoc($result);
+        extract($row);
+        return $musictipo_label;
+        }
+        
+    function get_cantante($persona_id) {
+        global $db;
+        $query = 'SELECT
+        persona_nomComple
+        FROM
+        persona
+        WHERE
+        persona_id ='.$persona_id;
+        $result = mysqli_query($db,$query) or die(mysqli_error($db));
+        $row = mysqli_fetch_assoc($result);
+        extract($row);
+        return $persona_nomComple;
+        }
+?>
+<?php
+// loop through the results
+while ($row = mysqli_fetch_assoc($result)) {
+    extract($row);
+    echo '<tr>';
+    echo '<td><a href="N3P3AdrianCasado2.php?music_id='.$music_id.'&orden=critica_fecha">' . $music_nombre . '</a></td>';
+    echo '<td>' . $musica_anio . '</td>';
+    echo '<td>' . get_tipos($musica_tipo) . '</td>';
+    echo '<td>' . get_cantante($musica_cantante) . '</td>';
+    echo '</tr>';
+}     
+?>
+ </table>
+<p><?php echo $num_music; ?> Musica</p>
+</div>
