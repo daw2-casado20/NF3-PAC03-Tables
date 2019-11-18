@@ -152,7 +152,6 @@ ENDHTML;
             return $critica_puntacion;    
     }
 
-
 // $row = mysqli_fetch_assoc($result);
 // extract($row);
 
@@ -163,6 +162,8 @@ ENDHTML;
 $critica_nombre      =   $critica_nombre;
 $critica_comentario      =   $critica_comentario;
 $critica_puntacion  =   $critica_puntacion;*/
+$cont=0;
+$cont2=0;
 
 while ($row = mysqli_fetch_assoc($result)) {
     /*extract($row);
@@ -171,18 +172,35 @@ while ($row = mysqli_fetch_assoc($result)) {
     $critica_nombre = $row['critica_nombre'];
     $critica_comentario = $row['critica_comentario'];
     $rating = generate_ratings($row['critica_puntacion']);
+    $cont++;
+    $cont2=$cont2+$row['critica_puntacion'];
     echo <<<ENDHTML
     <tr>
       <td style="vertical-align:top; text-align: center;">$critica_fecha</td>
       <td style="vertical-align:top;">$critica_nombre</td>
       <td style="vertical-align:top;">$critica_comentario</td>
       <td style="vertical-align:top;">$rating</td>
+
     </tr>
+
 ENDHTML;
 }
+
 echo <<<ENDHTML
   </div>
  </body>
 </html>
 ENDHTML;
+
 ?>
+
+<?php
+
+$res=$cont2/$cont;
+$res = round($res, 0);
+echo $res;
+$res = generate_ratings($res);
+echo 'La media de todas las valoraciones seria '. $res;
+
+?>
+
