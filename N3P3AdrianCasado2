@@ -137,10 +137,10 @@ ENDHTML;
     ORDER BY '. $_GET['orden'];
 
     $result = mysqli_query($db,$query) or die(mysqli_error($db));
-    $rating = 10;
+
     function generate_ratings($rating){
         $critica_puntacion = "";
-        for($i=1;$i<=$rating;$i++){
+        for($i=0;$i<$rating;$i++){
             $critica_puntacion.='<img id="1" src="estrella.jpg" width="20px" height="20px" alt="star");" />';
             $entera = intval($rating);
             $decimal= $rating - $entera;
@@ -148,30 +148,35 @@ ENDHTML;
                 if(is_int($decimal) == false ){
                     $critica_puntacion.='<img id="1" src="estrella.jpg" width="20px" height="20px" alt="star" style="clip :rect(0px, '.($div).'px,200px,0px); position: absolute;" />';
                 }
+            }
             return $critica_puntacion;    
-        }
     }
 
 
-/*$row = mysqli_fetch_assoc($result);
-extract($row);
+// $row = mysqli_fetch_assoc($result);
+// extract($row);
 
-$stars      =   generate_ratings($critica_puntacion);*/
+// $rating      =   generate_ratings($critica_puntacion);
 
 
 /*$critica_fecha     =   $critica_fecha;
 $critica_nombre      =   $critica_nombre;
 $critica_comentario      =   $critica_comentario;
 $critica_puntacion  =   $critica_puntacion;*/
+
 while ($row = mysqli_fetch_assoc($result)) {
-    extract($row);
-    $stars      =   generate_ratings($critica_puntacion);
+    /*extract($row);
+    $rating      =   generate_ratings($critica_puntacion);*/
+    $critica_fecha = $row['critica_fecha'];
+    $critica_nombre = $row['critica_nombre'];
+    $critica_comentario = $row['critica_comentario'];
+    $rating = generate_ratings($row['critica_puntacion']);
     echo <<<ENDHTML
     <tr>
       <td style="vertical-align:top; text-align: center;">$critica_fecha</td>
       <td style="vertical-align:top;">$critica_nombre</td>
       <td style="vertical-align:top;">$critica_comentario</td>
-      <td style="vertical-align:top;">$stars</td>
+      <td style="vertical-align:top;">$rating</td>
     </tr>
 ENDHTML;
 }
